@@ -1,5 +1,11 @@
+import Signup from "./pages/signup";
+
 function App() {
-  return <div className="text-4xl">Noteapp</div>;
+  return (
+    <div>
+      <Signup />
+    </div>
+  );
 }
 
 export default App;
