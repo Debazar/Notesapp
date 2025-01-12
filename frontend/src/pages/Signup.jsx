@@ -1,6 +1,24 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 
 const Signup = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/api/auth/register",
+        { name, email, password }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-blue-50">
       <div className="border border-blue-200 shadow-lg rounded-lg p-8 w-96 bg-white">
@@ -8,13 +26,14 @@ const Signup = () => {
           <h2 className="text-3xl font-semibold text-center text-indigo-600 mb-6">
             SIGNUP
           </h2>
-          <form>
+          <form onSubmit={handleSubmit()}>
             <div className="mb-5">
               <label className="block text-gray-700 font-medium mb-2">
                 Name
               </label>
               <input
                 className="w-full px-4 py-3 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => setName(e.target.value)}
                 type="text"
                 placeholder="Enter your Name..."
                 required
@@ -26,6 +45,7 @@ const Signup = () => {
               </label>
               <input
                 className="w-full px-4 py-3 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => setEmail(e.target.value)}
                 type="email"
                 placeholder="Enter your Email..."
                 required
@@ -37,6 +57,7 @@ const Signup = () => {
               </label>
               <input
                 className="w-full px-4 py-3 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 placeholder="Your password"
                 required
