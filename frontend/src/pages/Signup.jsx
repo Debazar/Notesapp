@@ -26,7 +26,7 @@ const Signup = () => {
           <h2 className="text-3xl font-semibold text-center text-indigo-600 mb-6">
             SIGNUP
           </h2>
-          <form onSubmit={handleSubmit()}>
+          <form onSubmit={handleSubmit}>
             <div className="mb-5">
               <label className="block text-gray-700 font-medium mb-2">
                 Name
