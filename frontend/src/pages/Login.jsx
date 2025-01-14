@@ -2,8 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Signup = () => {
-  const [name, setName] = useState("");
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -28,18 +27,6 @@ const Signup = () => {
             SIGNUP
           </h2>
           <form onSubmit={handleSubmit}>
-            <div className="mb-5">
-              <label className="block text-gray-700 font-medium mb-2">
-                Name
-              </label>
-              <input
-                className="w-full px-4 py-3 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                onChange={(e) => setName(e.target.value)}
-                type="text"
-                placeholder="Enter your Name..."
-                required
-              />
-            </div>
             <div className="mb-5">
               <label className="block text-gray-700 font-medium mb-2">
                 Email
@@ -71,9 +58,9 @@ const Signup = () => {
               Signup
             </button>
             <p className="text-center text-gray-600 mt-4">
-              Already Have an Account?{" "}
-              <Link to="/login" className="text-indigo-600 hover:underline">
-                Login
+              Dont Have an Account?{" "}
+              <Link to="/register" className="text-indigo-600 hover:underline">
+                Signup
               </Link>
             </p>
           </form>
@@ -83,4 +70,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Login;
