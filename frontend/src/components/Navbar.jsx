@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/ContextProvider";
 
 const Navbar = () => {
   const handleLogout = () => {};
-
+  const { user } = useAuth();
   return (
     <nav className="bg-white shadow-md px-6 py-4 flex justify-between items-center">
       <div className="flex items-center space-x-4">
@@ -23,26 +24,33 @@ const Navbar = () => {
         />
 
         <div className="flex items-center space-x-4">
-          <span className="text-gray-700 font-medium">User Name</span>
-          <Link
-            to="/login"
-            className="text-indigo-600 hover:text-indigo-700 transition duration-300"
-          >
-            Login
-          </Link>
-          <Link
-            to="/signup"
-            className="text-indigo-600 hover:text-indigo-700 transition duration-300"
-          >
-            Signup
-          </Link>
+          {!user ? (
+            <>
+              <Link
+                to="/login"
+                className="text-indigo-600 hover:text-indigo-700 transition duration-300"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className="text-indigo-600 hover:text-indigo-700 transition duration-300"
+              >
+                Signup
+              </Link>
+            </>
+          ) : (
+            <>
+              <span className="text-gray-700 font-medium">{user.name}</span>
 
-          <button
-            onClick={handleLogout}
-            className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-300"
-          >
-            Logout
-          </button>
+              <button
+                onClick={handleLogout}
+                className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-300"
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
       </div>
     </nav>
