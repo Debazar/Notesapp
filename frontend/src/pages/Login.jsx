@@ -15,6 +15,7 @@ const Login = () => {
         { email, password }
       );
       if (response.data.success) {
+        localStorage.setItem("token", response.data.token);
         navigate("/");
       }
     } catch (error) {
@@ -61,7 +62,7 @@ const Login = () => {
               Signup
             </button>
             <p className="text-center text-gray-600 mt-4">
-              Dont Have an Account?{" "}
+              Don't Have an Account?
               <Link to="/register" className="text-indigo-600 hover:underline">
                 Signup
               </Link>
