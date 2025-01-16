@@ -9,6 +9,30 @@ const Home = () => {
     setModelOpen(false);
   };
 
+  const addNote = async (title, description) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/api/note/add",
+        {
+          title,
+          description,
+        },
+        {
+          headers: {
+            Authorisation: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        navigate("/");
+        closeModel();
+      }
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="bg-gray-100 mon-h-screen">
       <Navbar />
@@ -20,7 +44,7 @@ const Home = () => {
         +
       </button>
 
-      {isModelOpen && <NoteModel closeModel={closeModel} />}
+      {isModelOpen && <NoteModel closeModel={closeModel} addNote={addNote} />}
     </div>
   );
 };

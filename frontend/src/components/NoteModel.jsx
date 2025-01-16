@@ -2,26 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const NoteModel = ({ closeModel }) => {
+const NoteModel = ({ closeModel, addNote }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:5001/api/note/add", {
-        title,
-        description,
-      });
-      if (response.data.success) {
-        navigate("/");
-        closeModel();
-      }
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
+    addNote(title, description);
   };
 
   return (
