@@ -31,7 +31,7 @@ const Login = () => {
       <div className="border border-blue-200 shadow-lg rounded-lg p-8 w-96 bg-white">
         <div>
           <h2 className="text-3xl font-semibold text-center text-indigo-600 mb-6">
-            SIGNUP
+            LOGIN
           </h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-5">
@@ -62,7 +62,7 @@ const Login = () => {
               type="submit"
               className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700 transition duration-300"
             >
-              Signup
+              Login
             </button>
             <p className="text-center text-gray-600 mt-4">
               Don't Have an Account?

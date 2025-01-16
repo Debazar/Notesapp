@@ -1,31 +1,51 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User";
+import User from "../models/User.js";
 
-const middleware = async (req, res) => {
+const middleware = async (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(" ")[1];
+    // Extract token from the authorization header
+    const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res
         .status(401)
-        .json({ success: false, message: "unauthorized access" });
+        .json({
+          success: false,
+          message: "Unauthorized access: No token provided",
+        });
     }
 
-    const decoded = jwt.verify(token, "secretkeyofnoteapp@123");
-
-    if (!decoded) {
-      return res.status(401).json({ success: false, message: "Wrong Token" });
+    // Verify the token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, "secretkeyofnoteapp@123");
+    } catch (err) {
+      return res.status(401).json({ success: false, message: "Invalid Token" });
     }
 
-    const user = await User.findById({ _id: decoded.id });
+    // Find the user in the database
+    let user;
+    try {
+      user = await User.findById(decoded.id);
+    } catch (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Database error" });
+    }
 
     if (!user) {
-      return res.status(401).json({ success: false, message: "no user" });
+      return res
+        .status(401)
+        .json({ success: false, message: "User not found" });
     }
-    const newUser = { name: user.name, id: user._id };
-    req.user = newUser;
+
+    // Attach user info to the request object
+    req.user = { name: user.name, id: user._id };
+
+    // Pass control to the next middleware
     next();
   } catch (error) {
+    console.error("Middleware Error:", error);
     return res.status(500).json({ success: false, message: "Please Login" });
   }
 };

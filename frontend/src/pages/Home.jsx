@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import NoteModel from "../components/NoteModel";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [isModelOpen, setModelOpen] = useState(false);
+  const navigate = useNavigate();
 
   const closeModel = () => {
     setModelOpen(false);
@@ -13,28 +16,29 @@ const Home = () => {
     try {
       const response = await axios.post(
         "http://localhost:5001/api/note/add",
-        {
-          title,
-          description,
-        },
+        { title, description },
         {
           headers: {
-            Authorisation: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
       if (response.data.success) {
         navigate("/");
         closeModel();
+      } else {
+        console.error("Failed to add note:", response.data.message);
       }
-      console.log(response);
     } catch (error) {
-      console.log(error);
+      console.error(
+        "Error adding note:",
+        error.response?.data || error.message
+      );
     }
   };
 
   return (
-    <div className="bg-gray-100 mon-h-screen">
+    <div className="bg-gray-100 min-h-screen">
       <Navbar />
 
       <button
