@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import NoteModel from "../components/NoteModel";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import NoteCard from "../components/NoteCard";
 
 const Home = () => {
   const [isModelOpen, setModelOpen] = useState(false);
   const navigate = useNavigate();
+  const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:5001/api/note");
+        setNotes(data.notes);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchNotes();
+  }, []);
 
   const closeModel = () => {
     setModelOpen(false);
@@ -40,6 +54,12 @@ const Home = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <Navbar />
+
+      <div>
+        {notes.map((note) => (
+          <NoteCard note={note} />
+        ))}
+      </div>
 
       <button
         onClick={() => setModelOpen(true)}
