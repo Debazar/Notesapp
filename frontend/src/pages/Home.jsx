@@ -8,14 +8,11 @@ import { toast } from "react-toastify";
 
 const Home = () => {
   const [isModelOpen, setModelOpen] = useState(false);
-  const navigate = useNavigate();
+  const [filteredNotes, setFilteredNotes] = useState([]);
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentNote, setCurrentNote] = useState(null);
-
-  useEffect(() => {
-    fetchNotes();
-  }, []);
+  const [query, setQuery] = useState("");
 
   const fetchNotes = async () => {
     setLoading(true);
@@ -23,20 +20,34 @@ const Home = () => {
       const { data } = await axios.get("http://localhost:5001/api/note");
       setNotes(data.notes);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching notes:", error);
       toast.error("Failed to fetch notes. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  useEffect(() => {
+    if (!query) {
+      setFilteredNotes(notes);
+    } else {
+      setFilteredNotes(
+        notes.filter(
+          (note) =>
+            note.title.toLowerCase().includes(query.toLowerCase()) ||
+            note.description.toLowerCase().includes(query.toLowerCase())
+        )
+      );
+    }
+  }, [query, notes]);
+
   const closeModel = () => {
     setModelOpen(false);
-  };
-
-  const onEdit = (note) => {
-    setCurrentNote(note);
-    setModelOpen(true);
+    setCurrentNote(null);
   };
 
   const addNote = async (title, description) => {
@@ -52,11 +63,9 @@ const Home = () => {
       );
       if (response.data.success) {
         fetchNotes();
-        navigate("/");
         closeModel();
         toast.success("Note added successfully!");
       } else {
-        console.error("Failed to add note:", response.data.message);
         toast.error("Failed to add note. Please try again.");
       }
     } catch (error) {
@@ -81,19 +90,17 @@ const Home = () => {
       );
       if (response.data.success) {
         fetchNotes();
-        navigate("/");
         closeModel();
-        toast.success("Note Updated successfully!");
+        toast.success("Note updated successfully!");
       } else {
-        console.error("Failed to Edit note:", response.data.message);
-        toast.error("Failed to Edit note. Please try again.");
+        toast.error("Failed to update note. Please try again.");
       }
     } catch (error) {
       console.error(
-        "Error Updating note:",
+        "Error updating note:",
         error.response?.data || error.message
       );
-      toast.error("Error Updating note. Please try again.");
+      toast.error("Error updating note. Please try again.");
     }
   };
 
@@ -109,10 +116,8 @@ const Home = () => {
       );
       if (response.data.success) {
         fetchNotes();
-        navigate("/");
         toast.success("Note deleted successfully!");
       } else {
-        console.error("Failed to delete note:", response.data.message);
         toast.error("Failed to delete note. Please try again.");
       }
     } catch (error) {
@@ -126,7 +131,7 @@ const Home = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <Navbar />
+      <Navbar setQuery={setQuery} />
 
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -134,15 +139,17 @@ const Home = () => {
             <div className="col-span-full text-center text-gray-500">
               Loading notes...
             </div>
-          ) : (
-            notes.map((note) => (
+          ) : filteredNotes.length > 0 ? (
+            filteredNotes.map((note) => (
               <NoteCard
                 key={note._id}
                 note={note}
-                onEdit={onEdit}
+                onEdit={setCurrentNote}
                 deleteNote={deleteNote}
               />
             ))
+          ) : (
+            <p>No notes available. Add your first note!</p>
           )}
         </div>
       </div>
