@@ -83,17 +83,44 @@ const Home = () => {
         fetchNotes();
         navigate("/");
         closeModel();
-        toast.success("Note added successfully!");
+        toast.success("Note Updated successfully!");
       } else {
-        console.error("Failed to add note:", response.data.message);
-        toast.error("Failed to add note. Please try again.");
+        console.error("Failed to Edit note:", response.data.message);
+        toast.error("Failed to Edit note. Please try again.");
       }
     } catch (error) {
       console.error(
-        "Error adding note:",
+        "Error Updating note:",
         error.response?.data || error.message
       );
-      toast.error("Error adding note. Please try again.");
+      toast.error("Error Updating note. Please try again.");
+    }
+  };
+
+  const deleteNote = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5001/api/note/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        fetchNotes();
+        navigate("/");
+        toast.success("Note deleted successfully!");
+      } else {
+        console.error("Failed to delete note:", response.data.message);
+        toast.error("Failed to delete note. Please try again.");
+      }
+    } catch (error) {
+      console.error(
+        "Error deleting note:",
+        error.response?.data || error.message
+      );
+      toast.error("Error deleting note. Please try again.");
     }
   };
 
@@ -109,7 +136,12 @@ const Home = () => {
             </div>
           ) : (
             notes.map((note) => (
-              <NoteCard key={note._id} note={note} onEdit={onEdit} />
+              <NoteCard
+                key={note._id}
+                note={note}
+                onEdit={onEdit}
+                deleteNote={deleteNote}
+              />
             ))
           )}
         </div>
