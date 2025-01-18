@@ -8,6 +8,11 @@ const ContextProvider = ({ children }) => {
     setUser(user);
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+  };
+
   useEffect(() => {
     const verifyUser = async () => {
       try {
@@ -30,7 +35,7 @@ const ContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <authContext.Provider value={{ user, login }}>
+    <authContext.Provider value={{ user, login, logout }}>
       {children}
     </authContext.Provider>
   );

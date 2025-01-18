@@ -69,7 +69,7 @@ router.post("/login", async (req, res) => {
 
 router.get("/verify", middleware, async (req, res) => {
   try {
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true, user: req.user });
   } catch (error) {}
 });
 
