@@ -17,7 +17,11 @@ const Home = () => {
   const fetchNotes = async () => {
     setLoading(true);
     try {
-      const { data } = await axios.get("http://localhost:5001/api/note");
+      const { data } = await axios.get("http://localhost:5001/api/note", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       setNotes(data.notes);
     } catch (error) {
       console.error("Error fetching notes:", error);

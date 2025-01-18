@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 const router = express.Router();
+import middleware from "../middleware/middleware.js";
 
 router.post("/register", async (req, res) => {
   try {
@@ -55,17 +56,21 @@ router.post("/login", async (req, res) => {
       expiresIn: "5h",
     });
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        token,
-        user: { name: user.name },
-        message: "Login Succesfully",
-      });
+    return res.status(200).json({
+      success: true,
+      token,
+      user: { name: user.name },
+      message: "Login Succesfully",
+    });
   } catch (error) {
     return res.status(500).json({ success: false, message: "Error Login in" });
   }
+});
+
+router.get("/verify", middleware, async (req, res) => {
+  try {
+    return res.status(200).json({ success: true });
+  } catch (error) {}
 });
 
 export default router;
